@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api, { request } from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import AddToCart from "../components/AddToCart";
 
 type Product = {
   id: number;
@@ -105,6 +106,7 @@ export default function Products() {
             <div style={{ fontWeight: 600 }}>{p.name}</div>
             <div style={{ color: "#6b7280", fontSize: 13 }}>{p.code}</div>
             <div style={{ marginTop: 8 }}>{fPrice(p.price_cents)}</div>
+            <AddToCart productId={p.id} />
           </li>
         ))}
       </ul>
