@@ -15,6 +15,7 @@ module.exports = {
         references: { model: "products", key: "id" },
         onDelete: "CASCADE",
       },
+      quantity: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 1 },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
