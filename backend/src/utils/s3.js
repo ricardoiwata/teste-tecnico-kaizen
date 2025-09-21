@@ -13,7 +13,6 @@ async function createPresignedPutURL({
     Bucket: bucket,
     Key: key,
     ContentType: contentType,
-    ACL: "public-read",
   });
   const url = await getSignedUrl(s3, command, { expiresIn });
   return url;

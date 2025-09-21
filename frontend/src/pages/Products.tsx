@@ -107,6 +107,13 @@ export default function Products() {
             <div style={{ fontWeight: 600 }}>{p.name}</div>
             <div style={{ color: "#6b7280", fontSize: 13 }}>{p.code}</div>
             <div style={{ marginTop: 8 }}>{fPrice(p.price_cents)}</div>
+            {p.image_url && (
+              <img
+                src={p.image_url}
+                alt={p.name}
+                style={{ width: "100%", marginTop: 8, borderRadius: 6 }}
+              />
+            )}
             <AddToCart productId={p.id} />
             <UploadImage productId={p.id} onDone={load} />
           </li>
