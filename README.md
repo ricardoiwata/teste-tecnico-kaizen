@@ -32,14 +32,14 @@ Foi desenvolvido em etapas, seguindo boas práticas de commits, validação e ar
    ```bash
    npm install
    ```
-3. Configure variáveis de ambiente em `.env`:
+3. Configure variáveis de ambiente em `.env.example` e renomeie para `.env`:
 
    ```env
    PORT=4000
    JWT_SECRET=seuSegredoAqui
    CORS_ORIGIN=http://localhost:5173
 
-   # Bonus AWS S3
+   # AWS S3
    AWS_ACCESS_KEY_ID=SUACHAVE
    AWS_SECRET_ACCESS_KEY=SUASECRET
    AWS_REGION=sua-regiao (us-east-1 || us-east-2)
@@ -116,7 +116,7 @@ Foi desenvolvido em etapas, seguindo boas práticas de commits, validação e ar
    ```bash
    npm install
    ```
-3. Crie `.env`:
+3. Configure variáveis de ambiente em `.env.example` e renomeie para `.env`:
    ```env
    VITE_API_URL=http://localhost:4000/api
    ```
@@ -139,7 +139,7 @@ Foi desenvolvido em etapas, seguindo boas práticas de commits, validação e ar
 - **Produtos**
   - Listagem paginada
   - Busca por código/nome
-  - (Bônus) Upload de imagem para S3
+  - Upload de imagem para S3
 - **Carrinho**
   - Adicionar item
   - Listar itens
