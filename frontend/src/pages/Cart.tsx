@@ -56,7 +56,7 @@ export default function Cart() {
         <div className="row" style={{ justifyContent: "space-between" }}>
           <h2 style={{ margin: 0, color: "var(--primary)" }}>Carrinho</h2>
           <div className="row">
-            <button className="btn ghost" onClick={() => nav("/products")}>
+            <button className="btn logout" onClick={() => nav("/products")}>
               Voltar aos produtos
             </button>
           </div>

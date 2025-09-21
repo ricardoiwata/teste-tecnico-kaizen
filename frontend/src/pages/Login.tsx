@@ -57,7 +57,11 @@ export default function Login() {
             <button className="btn" type="submit" disabled={loading}>
               {loading ? "Entrando..." : "Entrar"}
             </button>
-            <Link to="/register" className="small">
+            <Link
+              to="/register"
+              style={{ textDecoration: "underline" }}
+              className="small"
+            >
               Criar conta
             </Link>
           </div>
@@ -70,7 +74,9 @@ export default function Login() {
         <div className="auth-footer">
           <span>Ainda não tem conta?</span>
           <br />
-          <Link to="/register">Criar cadastro</Link>
+          <Link to="/register" style={{ textDecoration: "underline" }}>
+            Criar cadastro
+          </Link>
         </div>
       </div>
     </div>
