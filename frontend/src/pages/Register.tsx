@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/logo-kaizen.png";
 
 export default function Register() {
-  const [name, setName] = useState("Ana");
-  const [email, setEmail] = useState("ana@ex.com");
-  const [password, setPassword] = useState("123456");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -20,56 +21,70 @@ export default function Register() {
     if (ok) {
       setMsg("Conta criada! Faça login.");
       nav("/login");
-    } else {
-      setMsg(
-        "Erro ao cadastrar. Verifique os dados (email pode já estar em uso)."
-      );
-    }
+    } else setMsg("Erro ao cadastrar. Verifique os dados.");
   }
 
+  const isErrorMessage = msg.toLowerCase().includes("erro");
+
   return (
-    <div
-      style={{
-        maxWidth: 360,
-        margin: "48px auto",
-        fontFamily: "Inter, sans-serif",
-      }}
-    >
-      <h1 style={{ marginBottom: 16 }}>Cadastrar</h1>
-      <form onSubmit={onSubmit}>
-        <label>Nome</label>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          minLength={2}
-          style={{ width: "100%", marginBottom: 12 }}
-        />
-        <label>Email</label>
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          type="email"
-          style={{ width: "100%", marginBottom: 12 }}
-        />
-        <label>Senha</label>
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={6}
-          type="password"
-          style={{ width: "100%", marginBottom: 12 }}
-        />
-        <button type="submit" disabled={loading} style={{ marginTop: 8 }}>
-          {loading ? "Enviando..." : "Cadastrar"}
-        </button>
-      </form>
-      {msg && <p style={{ marginTop: 12 }}>{msg}</p>}
-      <p style={{ marginTop: 16 }}>
-        Já tem conta? <Link to="/login">Entrar</Link>
-      </p>
+    <div className="auth-layout">
+      <div className="auth-card">
+        <div className="auth-brand">
+          <img src={logo} alt="Kaizen Autopeças" className="auth-logo" />
+          <div>
+            <h2>Crie sua conta</h2>
+            <p className="auth-subtitle">
+              Cadastre-se para acessar o catálogo e o carrinho.
+            </p>
+          </div>
+        </div>
+        <form className="auth-form" onSubmit={onSubmit}>
+          <label className="label">Nome</label>
+          <input
+            className="input"
+            required
+            minLength={2}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Seu nome"
+          />
+          <label className="label">Email</label>
+          <input
+            className="input"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="seu@email.com"
+          />
+          <label className="label">Senha</label>
+          <input
+            className="input"
+            type="password"
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="mínimo 6 caracteres"
+          />
+          <div className="auth-actions">
+            <button className="btn" type="submit" disabled={loading}>
+              {loading ? "Enviando..." : "Cadastrar"}
+            </button>
+            <Link to="/login" className="small">
+              Já tenho conta
+            </Link>
+          </div>
+          {msg && (
+            <p
+              className="auth-feedback"
+              style={{ color: isErrorMessage ? "var(--danger)" : "var(--success)" }}
+            >
+              {msg}
+            </p>
+          )}
+        </form>
+      </div>
     </div>
   );
 }

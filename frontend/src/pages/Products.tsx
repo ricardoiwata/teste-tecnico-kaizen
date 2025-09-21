@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import api, { request } from "../api/client";
-import { useAuth } from "../context/AuthContext";
 import AddToCart from "../components/AddToCart";
 import UploadImage from "../components/UploadImage";
 
@@ -18,127 +17,125 @@ export default function Products() {
   const [limit] = useState(12);
   const [total, setTotal] = useState(0);
   const [q, setQ] = useState("");
-  const { logout } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
 
-  function fPrice(cents: number) {
-    return (cents / 100).toLocaleString("pt-BR", {
+  function price(c: number) {
+    return (c / 100).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
     });
   }
 
   async function load() {
+    setLoading(true);
+    setErr("");
     const res = await request<{
       items: Product[];
       page: number;
       limit: number;
       total: number;
     }>(api.get(`/products?page=${page}&limit=${limit}`));
+    setLoading(false);
     if (res.ok) {
       setItems(res.data.items);
       setTotal(res.data.total);
-    }
+    } else setErr(res.error);
   }
 
   async function search() {
     const term = q.trim();
     if (!term) return load();
+    setLoading(true);
+    setErr("");
     const res = await request<{ items: Product[] }>(
       api.get(`/products/search?q=${encodeURIComponent(term)}`)
     );
+    setLoading(false);
     if (res.ok) setItems(res.data.items);
+    else setErr(res.error);
+  }
+
+  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") search();
   }
 
   useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    load(); /* eslint-disable-next-line */
   }, [page]);
 
   return (
-    <div
-      style={{
-        maxWidth: 920,
-        margin: "32px auto",
-        fontFamily: "Inter, system-ui, sans-serif",
-      }}
-    >
-      <header
-        style={{
-          display: "flex",
-          gap: 12,
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <h2 style={{ margin: 0 }}>Produtos</h2>
-        <div style={{ display: "flex", gap: 8 }}>
-          <input
-            placeholder="Buscar por código (ex.: P-0001) ou nome"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
-          <button onClick={search}>Buscar</button>
-          <button onClick={() => (window.location.href = "/cart")}>
-            Carrinho
-          </button>
-          <button onClick={logout}>Sair</button>
+    <>
+      <div className="card" style={{ marginBottom: 16 }}>
+        <div className="row" style={{ justifyContent: "space-between" }}>
+          <h2 style={{ margin: 0, color: "var(--primary)" }}>Produtos</h2>
+          <div className="row">
+            <input
+              className="input"
+              placeholder="Buscar por código ou nome"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onKeyDown={onKeyDown}
+              style={{ width: 260, borderColor: "#33a1a9" }}
+            />
+            <button className="btn" onClick={search}>
+              Buscar
+            </button>
+          </div>
         </div>
-      </header>
+        {loading && <p className="small">Carregando…</p>}
+        {!loading && err && (
+          <p style={{ color: "var(--danger)" }}>Erro: {err}</p>
+        )}
+      </div>
 
       <ul
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateColumns: "repeat(3,1fr)",
           gap: 16,
-          padding: 0,
+          alignItems: "start",
           listStyle: "none",
-          marginTop: 16,
+          padding: 0,
         }}
       >
         {items.map((p) => (
-          <li
-            key={p.id}
-            style={{
-              border: "1px solid #e5e7eb",
-              borderRadius: 8,
-              padding: 16,
-            }}
-          >
-            <div style={{ fontWeight: 600 }}>{p.name}</div>
-            <div style={{ color: "#6b7280", fontSize: 13 }}>{p.code}</div>
-            <div style={{ marginTop: 8 }}>{fPrice(p.price_cents)}</div>
+          <li key={p.id} className="card">
             {p.image_url && (
               <img
                 src={p.image_url}
                 alt={p.name}
-                style={{ width: "100%", marginTop: 8, borderRadius: 6 }}
+                style={{ width: "100%", borderRadius: 8, marginBottom: 8 }}
               />
             )}
-            <AddToCart productId={p.id} />
+            <div style={{ fontWeight: 700 }}>{p.name}</div>
+            <div className="small">{p.code}</div>
+            <div style={{ marginTop: 8, marginBottom: 8 }}>
+              {price(p.price_cents)}
+            </div>
             <UploadImage productId={p.id} onDone={load} />
+            <AddToCart productId={p.id} />
           </li>
         ))}
       </ul>
 
-      <footer
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          marginTop: 16,
-        }}
-      >
-        <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+      <div className="row" style={{ marginTop: 16, justifyContent: "center" }}>
+        <button
+          className="btn page"
+          disabled={page <= 1}
+          onClick={() => setPage((p) => p - 1)}
+        >
           Anterior
         </button>
-        <span>Página {page}</span>
+        <span className="small">Página {page}</span>
         <button
+          className="btn page"
           disabled={page * limit >= total}
           onClick={() => setPage((p) => p + 1)}
         >
           Próxima
         </button>
-      </footer>
-    </div>
+      </div>
+    </>
   );
 }

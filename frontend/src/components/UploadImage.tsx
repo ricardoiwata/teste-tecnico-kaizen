@@ -58,7 +58,7 @@ export default function UploadImage({
   }
 
   return (
-    <button onClick={pickAndUpload} disabled={busy}>
+    <button className="btn upload" onClick={pickAndUpload} disabled={busy}>
       {busy ? "Enviando..." : "Enviar imagem"}
     </button>
   );
