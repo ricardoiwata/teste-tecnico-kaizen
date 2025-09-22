@@ -5,6 +5,12 @@ Foi desenvolvido em etapas, seguindo boas práticas de commits, validação e ar
 
 ---
 
+## Q&A das perguntas técnicas
+
+[Perguntas & Respostas](ANSWERS.md)
+
+---
+
 ## 📂 Estrutura
 
 ```
